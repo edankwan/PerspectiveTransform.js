@@ -1,0 +1,60 @@
+html, body{
+    width: 100%;
+    height: 100%;
+    background-image: -moz-radial-gradient(50% 50%, circle farthest-corner, #FFF 20%, #efeee7);
+    background-image: -webkit-radial-gradient(50% 50%, circle farthest-corner, #FFF 20%, #efeee7);
+    background-image: -o-radial-gradient(50% 50%, circle farthest-corner, #FFF 20%, #efeee7);
+    background-image: -ms-radial-gradient(50% 50%, circle farthest-corner, #FFF 20%, #efeee7);
+    background-image: radial-gradient(50% 50%, circle farthest-corner, #FFF 20%, #efeee7);
+}
+#info-container{
+    position: absolute;
+    width: 512px;
+    left: 50%;
+    top: 50%;
+    margin-left: -256px;
+    margin-top: 320px;
+    font-family: "Times New Roman",Georgia,Serif;
+    font-style: italic;
+    font-weight: bold;
+    text-shadow: #CCC -1px -1px 2px;
+    text-align: center;
+}
+#container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -276px;
+    margin-top: -276px;
+    width: 512px;
+    height: 512px;
+    background-color: #FFF;
+    
+    border: 20px solid #FFF;
+    -moz-box-shadow: 0 0 30px #CCC;
+    -webkit-box-shadow: 0 0 30px #CCC;
+    -o-box-shadow: 0 0 30px #CCC;
+    -ms-box-shadow: 0 0 30px #CCC;
+    box-shadow: 0 0 30px #CCC;
+}
+.img {
+    position: absolute;
+    width: 512px;
+    height: 512px;
+    background-image: url(../img/lenna.jpg);
+}
+.pt {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    margin-left: -15px;
+    margin-top: -15px;
+    border-radius: 15px;
+    background-color: #F00;
+    cursor: pointer;
+}
+
+
+
+
+
