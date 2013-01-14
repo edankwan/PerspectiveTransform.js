@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="css/reset.css" type="text/css"/>
         <link rel="stylesheet" href="css/drag_points.css" type="text/css"/>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-        <script src="../dist/PerspectiveTransform.min.js"></script>
+        <script src="js/PerspectiveTransform.min.js"></script>
     </head>
     <body>
         <div id="info-container">
@@ -28,8 +28,8 @@
             var pts = $(".pt");
             var IMG_WIDTH = 512;
             var IMG_HEIGHT = 512;
-            
-    
+
+
             var transform = new PerspectiveTransform(img[0], IMG_WIDTH, IMG_HEIGHT, true);
             var tl = pts.filter(".tl").css({
                 left : transform.topLeft.x,
@@ -57,7 +57,7 @@
                     left : targetPoint.x,
                     top : targetPoint.y
                 });
-                
+
                 // check the polygon error, if it's 0, which mean there is no error
                 if(transform.checkError()==0){
                     transform.update();
@@ -66,7 +66,7 @@
                     img.hide();
                 }
             }
-            
+
             pts.mousedown(function(e) {
                 target = $(this);
                 targetPoint = target.hasClass("tl") ? transform.topLeft : target.hasClass("tr") ? transform.topRight : target.hasClass("bl") ? transform.bottomLeft : transform.bottomRight;
