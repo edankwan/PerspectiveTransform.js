@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<project name="Hasher" default="all" basedir="./">
+<project name="PerspectiveTransform" default="all" basedir="./">
     <description>
         Build Task. Unify files, compress, validate, generate documentation and distribution files.
     </description>
@@ -46,7 +46,7 @@
         <echo message="${dist.name} built" />
     </target>
 
-    <target name="minify" description="Build minified version of Hasher.">
+    <target name="minify" description="Build minified version of PerspectiveTransform.">
         <echo message="Building ${dist.min.name}" />
         <apply executable="java" parallel="false" verbose="true" dest="${dist.dir}">
             <fileset dir="${dist.dir}">

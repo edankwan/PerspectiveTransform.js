@@ -22,6 +22,16 @@ This is an extremely useful class for advanced CSS 3d animation. You can set the
     }
 ```
 
+##Firefox on retina screen fix##
+```js
+PerspectiveTransform.useDPRFix = true; // put true if you need to apply this fix
+
+window.onresize = function(){
+    PerspectiveTransform.dpr = window.devicePixelRatio; // update the dpr
+    transform.update(); // update the PerspectiveTransform instance
+}
+```
+
 ##Credit##
 The original PerspectiveTransform.js is created by  Israel Pastrana
 http://www.is-real.net/experiments/css3/wonder-webkit/js/real/display/PerspectiveTransform.js

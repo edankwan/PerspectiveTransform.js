@@ -1,43 +1,46 @@
 function PerspectiveTransform(element, width, height, useBackFacing){
-    
+
     this.element = element;
     this.style = element.style;
     this.computedStyle = window.getComputedStyle(element);
     this.width = width;
     this.height = height;
     this.useBackFacing = !!useBackFacing;
-    
+
     this.topLeft = {x: 0, y: 0};
     this.topRight = {x: width, y: 0};
     this.bottomLeft = {x: 0, y: height};
     this.bottomRight = {x: width, y: height};
 }
 
+PerspectiveTransform.useDPRFix = false;
+PerspectiveTransform.dpr = 1;
+
 PerspectiveTransform.prototype = (function(){
-    
+
     var app = {
-        stylePrefix: ""
-    }
-    
+        stylePrefix: ''
+    };
+
     var _transformStyleName;
     var _transformDomStyleName;
     var _transformOriginDomStyleName;
-    
+
     var aM = [[0, 0, 1, 0, 0, 0, 0, 0], [0, 0, 1, 0, 0, 0, 0, 0], [0, 0, 1, 0, 0, 0, 0, 0], [0, 0, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1, 0, 0], [0, 0, 0, 0, 0, 1, 0, 0], [0, 0, 0, 0, 0, 1, 0, 0], [0, 0, 0, 0, 0, 1, 0, 0]];
     var bM = [0, 0, 0, 0, 0, 0, 0, 0];
-    
+
     function _setTransformStyleName(){
-        var testStyle = document.createElement("div").style;
+        var testStyle = document.createElement('div').style;
         app.stylePrefix =
-            "webkitTransform" in testStyle ? "webkit" :
-            "MozTransform" in testStyle ? "Moz" :
-            "msTransform" in testStyle ? "ms" :
-            "";
-        _transformStyleName = app.stylePrefix + (app.stylePrefix.length>0?"Transform":"transform");
-        _transformOriginDomStyleName = "-"+app.stylePrefix.toLowerCase()+"-transform-origin";
+            'webkitTransform' in testStyle ? 'webkit' :
+            'MozTransform' in testStyle ? 'Moz' :
+            'msTransform' in testStyle ? 'ms' :
+            '';
+        _transformStyleName = app.stylePrefix + (app.stylePrefix.length>0?'Transform':'transform');
+        _transformOriginDomStyleName = '-'+app.stylePrefix.toLowerCase()+'-transform-origin';
     }
-    
-    
+
+
     // Check the distances between each points and if there is some points with the distance lequal to or less than 1 pixel, then return true. Otherwise return false;
     function _hasDistancesError(){
         var lenX = this.topLeft.x - this.topRight.x;
@@ -58,15 +61,15 @@ PerspectiveTransform.prototype = (function(){
         lenX = this.topRight.x - this.bottomLeft.x;
         lenY = this.topRight.y - this.bottomLeft.y;
         if( Math.sqrt(lenX * lenX +  lenY * lenY)<=1) return true;
-        
+
         return false;
     }
-    
+
     // Get the determinant of given 3 points
     function _getDeterminant(p0, p1, p2){
         return p0.x * p1.y + p1.x * p2.y + p2.x * p0.y - p0.y * p1.x - p1.y * p2.x - p2.y * p0.x;
     }
-    
+
     // Return true if it is a concave polygon or if it is backfacing when the useBackFacing property is false. Otehrwise return true;
     function _hasPolyonError(){
         var det1 = _getDeterminant(this.topLeft, this.topRight, this.bottomRight);
@@ -83,34 +86,34 @@ PerspectiveTransform.prototype = (function(){
         }else{
             if(det1<=0||det2<=0) return true;
         }
-        return false; 
+        return false;
     }
-    
+
     function checkError(){
-        if(_hasDistancesError.apply(this)) return 1; // Points are too close to each other. 
+        if(_hasDistancesError.apply(this)) return 1; // Points are too close to each other.
         if(_hasPolyonError.apply(this)) return 2; // Concave or backfacing if the useBackFacing property is false
         return 0; // no error
     }
-    
+
     function update() {
         var width = this.width;
         var height = this.height;
-        
+
         //  get the offset from the transfrom origin of the element
         var offsetX = 0;
         var offsetY = 0;
         var offset = this.computedStyle.getPropertyValue(_transformOriginDomStyleName);
-        if(offset.indexOf("px")>-1){
-            offset = offset.split("px");
+        if(offset.indexOf('px')>-1){
+            offset = offset.split('px');
             offsetX = -parseFloat(offset[0]);
             offsetY = -parseFloat(offset[1]);
-        }else if(offset.indexOf("%")>-1){
-            offset = offset.split("%");
+        }else if(offset.indexOf('%')>-1){
+            offset = offset.split('%');
             offsetX = -parseFloat(offset[0]) * width / 100;
             offsetY = -parseFloat(offset[1]) * height / 100;
         }
-        
-        //  magic here: 
+
+        //  magic here:
         var dst = [this.topLeft, this.topRight, this.bottomLeft, this.bottomRight];
         var arr = [0, 1, 2, 3, 4, 5, 6, 7];
         for(var i = 0; i < 4; i++) {
@@ -162,18 +165,26 @@ PerspectiveTransform.prototype = (function(){
             arr[k] /= aM[k][k];
             for(i = 0; i < k; i++) arr[i] -= arr[k] * aM[i][k];
         }
-        
+
+        var style = 'matrix3d(' + arr[0].toFixed(9) + ',' + arr[3].toFixed(9) + ', 0,' + arr[6].toFixed(9) + ',' + arr[1].toFixed(9) + ',' + arr[4].toFixed(9) + ', 0,' + arr[7].toFixed(9) + ',0, 0, 1, 0,' + arr[2].toFixed(9) + ',' + arr[5].toFixed(9) + ', 0, 1)';
+
+        //A fix for firefox on retina display, require setting PerspectiveTransform.useDPRFix to true and update the PerspectiveTransform.dpr with the window.devicePixelRatio
+        if(PerspectiveTransform.useDPRFix) {
+            var dpr = PerspectiveTransform.dpr;
+            style = 'scale(' + dpr + ',' + dpr + ')perspective(1000px)' + style + 'translateZ('+ ((1 - dpr) * 1000) + 'px)';
+        }
+
         // use toFixed() just in case the Number became something like 3.10000001234e-9
-        return this.style[_transformStyleName] = "matrix3d(" + arr[0].toFixed(9) + "," + arr[3].toFixed(9) + ", 0," + arr[6].toFixed(9) + "," + arr[1].toFixed(9) + "," + arr[4].toFixed(9) + ", 0," + arr[7].toFixed(9) + ",0, 0, 1, 0," + arr[2].toFixed(9) + "," + arr[5].toFixed(9) + ", 0, 1)";
-        
+        return this.style[_transformStyleName] = style;
+
     }
-    
+
     _setTransformStyleName();
-    
+
     app.update = update;
     app.checkError = checkError;
-    
+
     return app;
-    
-    
+
+
 })();
