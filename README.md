@@ -4,7 +4,7 @@ This is an extremely useful class for advanced CSS 3d animation. You can set the
 
 [![alt text](http://edankwan.github.com/PerspectiveTransform.js/screenshot/001.jpg)](http://edankwan.github.com/PerspectiveTransform.js/)
 
-##Usage##
+## Usage ##
 ```js
     // create PerspectiveTransfrom
     var transform = new PerspectiveTransform(elem, width, height, useBackFacing);
@@ -22,7 +22,7 @@ This is an extremely useful class for advanced CSS 3d animation. You can set the
     }
 ```
 
-##Firefox on retina screen fix##
+## Firefox on retina screen fix ##
 ```js
 PerspectiveTransform.useDPRFix = true; // put true if you need to apply this fix
 
@@ -32,7 +32,7 @@ window.onresize = function(){
 }
 ```
 
-##Credit##
+## Credit ##
 The original PerspectiveTransform.js is created by  Israel Pastrana
 http://www.is-real.net/experiments/css3/wonder-webkit/js/real/display/PerspectiveTransform.js
 
